@@ -1,0 +1,19 @@
+.wrapper{
+    width: 300px;
+    height: 300px;
+    text-align:center;
+    background-color:lavenderblush;
+    align-content: center;
+    align-self: center;
+    border-color:hotpink;
+    border-radius: 10%;
+    border-style:solid;  
+    padding: 10px;
+    margin-left: 35%;
+    margin-top: 10%;
+
+}
+button{
+    color:black;
+    background-color:cornsilk;
+}
