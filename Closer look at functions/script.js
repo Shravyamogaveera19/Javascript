@@ -98,7 +98,7 @@
     // greet('Hello')('Shravya');
     //greetArr('Hello')('Shravya');
 
-    
+    /*
     const AirIndia ={
         airline: 'AirIndia',
         iataCode : 'AI',
@@ -186,4 +186,31 @@
     };
     const addVAT2 = addTaxRate(0.23);
     console.log(addVAT2(100));
-    console.log(addVAT2(23));
+    console.log(addVAT2(23));*/
+    
+
+    /*
+    const runOnce = function(){
+        console.log('This will not run again');
+    };
+    runOnce();
+    (function(){
+        console.log('This will not run again');
+        const isPrivate = 23;
+    })();
+
+    //console.log(isPrivate); //Error
+
+    (() => console.log('This will also not run again'))
+    ();
+
+    {
+        const isPrivate = 23;
+        var notPrivate = 46;
+    }
+    //console.log(isPrivate); //Error
+    console.log(notPrivate);  // accessible
+    */
+   
+
+
