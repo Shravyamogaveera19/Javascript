@@ -30,6 +30,9 @@ document.addEventListener('keydown',function(e){
     }
 });
 
+
+//Scrolling
+
 const btnScrollTo = document.querySelector('.btn--scroll-to');
 const section1 = document.querySelector('#section--1');
 
@@ -64,6 +67,50 @@ btnScrollTo.addEventListener('click',function(e){
     */
     section1.scrollIntoView({behavior : 'smooth'});
 });
+
+//page Navigation
+
+/*
+document.querySelectorAll('.nav__link').forEach
+(function(el){
+    el.addEventListener('click',function(e){
+        e.preventDefault();
+        const  id = this.getAttribute('href');
+        console.log(id);
+        document.querySelector(id).scrollIntoView({behavior: 'smooth'});
+    })
+});
+*/
+
+//1.Add Event Listener To common parent element
+//2.Determine what element originated the event
+
+document.querySelector('.nav__links').addEventListener
+('click',function(e){
+    e.preventDefault();
+
+    //Matching Strategy
+    if(e.target.classList.contains('nav__link')){
+        const  id = e.target.getAttribute('href');
+        document.querySelector(id).scrollIntoView({
+            behavior: 'smooth'});
+    };
+});
+
+//tabbed Content
+const tabs = document.querySelectorAll
+('.operations__tab');
+const tabsContainer = document.querySelectorAll
+('.operations__tab-container');
+const tabsContent = document.querySelectorAll
+('.operations__content');
+
+tabsContainer.addEventListener('click',function(e){
+    const clicked = e.target.parentElement;
+    console.log(clicked);
+});
+
+
 
 ////////////////////////////////////////////////
 ////////////////////////////////////////////////
@@ -104,6 +151,8 @@ document.querySelector('.btn--close-cookie')
     message.remove();
 });
 
+
+////////////////////////////////////////
 //Styles
 message.style.backgroundColor ='#37383d';
 message.style.width ='120%';
@@ -151,5 +200,86 @@ logo.classList.contains('c'); //not includes
 
 //Dont use
 logo.className = 'jonas';
+*/
+////////////////////////////////////////////
+/*
+const h1 = document.querySelector('h1');
+
+
+const alertH1 =function(e){
+    alert('addEventListener:Great! You are reading the heading :D');
+
+    h1.removeEventListener('mouseenter',alertH1);
+};
+
+h1.onmouseenter = function(e){
+    alert('addEventListener:Great! You are reading the heading :D');
+};
+
+setTimeout(() => h1.removeEventListener('mouseenter',alertH1),3000);
+*/
+
+/*
+
+////////////////////////////////////
+
+//rgb(255,255,255)
+const randomInt = (min,max) =>
+    Math.floor(Math.random() * (max - min + 1) + min);
+
+const randomColor = () =>
+    `rgb(${randomInt(0,255)},${randomInt(0,255)},${randomInt(0,255)})`;
+console.log(randomColor());
+
+document.querySelector('.nav__link').addEventListener('click',function(e){
+    //console.log('LINK');
+    this.style.backgroundColor = randomColor();
+    console.log('LINK',e.target,e.currentTarget);
+
+    //Stop Propagation
+    //e.stopPropagation();
+});
+document.querySelector('.nav__links').addEventListener('click',function(e){
+    //console.log('LINK');
+    this.style.backgroundColor = randomColor();
+    console.log('CONTAINER',e.target),e.currentTarget;
+});
+document.querySelector('.nav').addEventListener('click',function(e){
+    //console.log('LINK');
+    this.style.backgroundColor = randomColor();
+    console.log('NAV',e.target,e.currentTarget);
+},
+true
+);
+*/
+
+/*
+const h1 = document.querySelector('h1');
+
+//Going downwards : child
+console.log(h1.querySelectorAll('.highlight'));
+console.log(h1.childNodes);
+console.log(h1.children);
+h1.firstElementChild.style.color = 'white';
+h1.lastElementChild.style.color = 'orangered';
+
+//Going upwards:parents
+console.log(h1.parentNode);
+console.log(h1.parentElement);
+
+h1.closest('.header').style.background = 'var(--gradient-secondary)';
+h1.closest('h1').style.background = 'var(--gradient-primary)';
+
+//Going sideways :siblings
+console.log(h1.previousElementSibling);
+console.log(h1.nextElementSibling);
+
+console.log(h1.previousSibling);
+console.log(h1.nextSibling);
+
+console.log(h1.parentElement.children);
+[...h1.parentElement.children].forEach(function(el){
+    if(el !== h1) el.style.transform = 'scale(0.5)';
+});
 */
 
