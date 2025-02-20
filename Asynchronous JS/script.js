@@ -171,7 +171,6 @@ const getCountryData = function (country) {
       //.then((data) => {
       //return fetch(`https://restcountries.com/v2/alpha/${neighbour}`);
     })
-    
     .then((data) => renderCountry(data, "neighbour")) 
     .catch((err) => {
       console.error(`${err} ERROR`);
