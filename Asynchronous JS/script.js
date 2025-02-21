@@ -1,31 +1,31 @@
 "use strict";
 
-// const btn = document.querySelector(".btn-country");
-// const countriesContainer = document.querySelector(".countries");
+const btn = document.querySelector(".btn-country");
+const countriesContainer = document.querySelector(".countries");
 
-// const renderCountry = function (data, className = "") {
-//   const html = `
-//       <article class="country ${className}">
-//         <img class="country__img" src="${data.flag}" />
-//         <div class="country__data">
-//           <h3 class="country__name">${data.name}</h3>
-//           <h4 class="country__region">${data.region}</h4>
-//           <p class="country__row"><span>👫</span>${(
-//             +data.population / 1000000
-//           ).toFixed(1)} people</p>
-//           <p class="country__row"><span>🗣️</span>${data.languages[0].name}</p>
-//           <p class="country__row"><span>💰</span>${data.currencies[0].name}</p>
-//         </div>
-//       </article>
-//       `;
-//   countriesContainer.insertAdjacentHTML("beforeend", html);
-//   countriesContainer.style.opacity = 1;
-// };
+const renderCountry = function (data, className = "") {
+  const html = `
+      <article class="country ${className}">
+        <img class="country__img" src="${data.flag}" />
+        <div class="country__data">
+          <h3 class="country__name">${data.name}</h3>
+          <h4 class="country__region">${data.region}</h4>
+          <p class="country__row"><span>👫</span>${(
+            +data.population / 1000000
+          ).toFixed(1)} people</p>
+          <p class="country__row"><span>🗣️</span>${data.languages[0].name}</p>
+          <p class="country__row"><span>💰</span>${data.currencies[0].name}</p>
+        </div>
+      </article>
+      `;
+  countriesContainer.insertAdjacentHTML("beforeend", html);
+  countriesContainer.style.opacity = 1;
+};
 
-// const renderError  = function(msg){
-//   countriesContainer.insertAdjacentText('beforeend',msg);
-//   //countriesContainer.style.opacity = 1;
-//  }
+const renderError  = function(msg){
+  countriesContainer.insertAdjacentText('beforeend',msg);
+  countriesContainer.style.opacity = 1;
+ }
 
 ////////////////////////////////////////////////////////
 // PUBLIC API //REST countries
@@ -260,50 +260,59 @@ const whereAmI = function(){
 btn.addEventListener('click',whereAmI);
 */
 
-/////////////////////////////////////////////////////
-
-//Coding Challenge 2
-
-const imgContainer = document.querySelector('.images');
-const createImage = function (imgPath){
-  return new Promise(function(resolve,reject){
-      const img = document.createElement('img');
-      img.src = imgPath;
-
-      img.addEventListener('load' , function() {
-        imgContainer.append(img);
-        resolve(img);
-      });
-
-      img.addEventListener('error',function(){
-        reject(new Error('Image not found'));
-      });
+//Using async and Await functions
+const getPosition = function(){
+  return new Promise(function(resolve ,reject){
+    navigator.geolocation.getCurrentPosition(resolve,reject);
   });
-};
+}
 
-const wait = function(seconds){
-  return new Promise(function(resolve){
-      setTimeout(resolve, seconds*1000);
-  });
-};
+const whereAmI = async function(){
+  try{
+  //GeoLocation
+  const pos = await getPosition();
+  const {latitude:lat ,longitude:lng} = pos.coords;
+  
+  //Reverse Geocoding
+  const resGeo = await fetch(`https://geocode.xyz/${lat},${lng}?geoit=json`);
+  if(!resGeo.ok) throw new Error('Problem getting location')
 
-let currentImg;
-createImage('img-1.jpg')
-.then(img => {
-  currentImg = img;
-  console.log('Image 1 loaded');
-  return wait(2);
-})
-.then(() => {
-  currentImg.style.display = 'none';
-  return createImage('img-2.jpg');
-})
-.then(()=>{
-  currentImg = img;
-  console.log('Image 2 loaded');
-  return wait(2);
-})
-.then(()=>{
-  currentImg.style.display = 'none';
-})
-.catch(err => console.error(err));
+  const dataGeo = await resGeo.json();
+
+  //Country Data
+  const res = await fetch(`https://restcountries.com/v2/name/${dataGeo.country}`);
+  if(!res.ok) throw new Error('Problem getting location')
+  const data = await res.json();
+  
+  renderCountry(data[0]);
+
+  return `You are in ${dataGeo.city},${dataGeo.country}`;
+  }
+  catch(err){
+    console.error(`${err} ERROR`);
+    renderError(`Something went wrong ${err.message}`);
+
+    //Reject async Promises
+    throw err;
+  }
+}
+
+console.log("1:Will get Location");
+// const city = whereAmI();
+// console.log(city);
+// whereAmI()
+// .then(city => console.log(`2:${city}`))
+// .catch(err => console.error(`2:${err.message} ERROR`))
+// .finally(()=>console.log("3:Finished Getting Location"));
+
+(async function(){
+  try{
+    const city = await whereAmI();
+    console.log(`2:${city}`);
+  }
+  catch(err){
+    console.error(`2:${err.message} ERROR`)
+  }
+  console.log("3:Finished Getting Location")
+})();
+
