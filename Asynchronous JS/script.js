@@ -30,8 +30,8 @@ const renderError  = function(msg){
 ////////////////////////////////////////////////////////
 // PUBLIC API //REST countries
 
-
-/*  
+//AJAX CALL 
+/*
   const getCountryandNeighbour = function(country)
   {
       //Ajax call country 2
@@ -65,7 +65,7 @@ const renderError  = function(msg){
       });
       });
   }
-
+*/
   /*
   getCountryandNeighbour('usa');
 
@@ -103,7 +103,9 @@ const renderError  = function(msg){
   };
   */
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Using promises
+/*
 const getJSON = function(url, errorMsg = 'Something went Wrong'){
   return fetch(url)
   .then((response) => {
@@ -114,110 +116,48 @@ const getJSON = function(url, errorMsg = 'Something went Wrong'){
     return response.json(); 
 })
 };
-// const getCountryData = function (country) {
-//     /*
-//     fetch(`https://restcountries.com/v2/name/${country}`)
-//     .then((response) => {
-//       console.log(response);
 
-//       if(!response.ok)
-//         throw new Error(`Country not found (${response.status})`);
-//       return response.json(); 
-//     })
-//     */  
-//    //Country1
-//     getJSON(`https://restcountries.com/v2/name/${country}`,`Country not found`)
-//     .then((data) => {
-//       renderCountry(data[0]);
 
-//       const neighbour = data[0].borders[0];
+const getCountryData = function (country) {
+   //Country1
+    getJSON(`https://restcountries.com/v2/name/${country}`,`Country not found`)
+    .then((data) => {
+      renderCountry(data[0]);
+
+      const neighbour = data[0].borders[0];
   
-//       if (!neighbour) throw new Error('No neighbour found!');
+      if (!neighbour) throw new Error('No neighbour found!');
 
-//       //Country 2
-//       return getJSON(`https://restcountries.com/v2/name/${neighbour}`,`Country not found`);
-//       //.then((data) => {
-//       //return fetch(`https://restcountries.com/v2/alpha/${neighbour}`);
-//     })
-//     .then((data) => renderCountry(data, "neighbour")) 
-//     .catch((err) => {
-//       console.error(`${err} ERROR`);
-//       renderError(`Something went wrong ${err
-//         .message}. Try again!`);
-//     })
-//     .finally(() => {
-//         countriesContainer.style.opacity = 1;
-//     });
-// };
+      //Country 2
+      return getJSON(`https://restcountries.com/v2/name/${neighbour}`,`Country not found`);
+      //.then((data) => {
+      //return fetch(`https://restcountries.com/v2/alpha/${neighbour}`);
+    })
+    .then((data) => renderCountry(data, "neighbour")) 
+    .catch((err) => {
+      console.error(`${err} ERROR`);
+      renderError(`Something went wrong ${err
+        .message}. Try again!`);
+    })
+    .finally(() => {
+        countriesContainer.style.opacity = 1;
+    });
+};
 
-// btn.addEventListener("click", function () {
-//   getCountryData('australia');
-// });
-
-/*
-console.log('Test Start');
-setTimeout(() => console.log('0 sec timer'),0);
-Promise.resolve('Resolved promise 1')
-.then(res =>
-  console.log(res)
-);
-
-Promise.resolve('Resolved promise 2')
-.then(res =>{
-  for(let i=0;i<1000000;i++){}
-  console.log(res);
+btn.addEventListener("click", function () {
+  getCountryData('australia');
 });
-console.log('Test end');
+
 */
 
-//Createing Promises
-
+//Creating Promises
 /*
-const lotteryPromise = new Promise( function(resolve, reject){
-   
-  console.log('Lottery draw is Happening!');
-   setTimeout(function(){
-    if(Math.random() >= 0.5){
-      resolve('You WIN');
-    }
-    else{
-      reject(new Error('You lost your money'));
-    }
-   },2000);
-});
-lotteryPromise
-.then(res => 
-  console.log(res)
-)
-.catch(err =>
-  console.error(err)
-)
-
 const wait = function(seconds){
     return new Promise(function(resolve){
         setTimeout(resolve, seconds*1000);
     });
 };
 
-wait(1)
-.then(() =>{
-  console.log('I waited for 1 seconds')
-  return wait(1);
-})
-.then(() =>{
-  console.log('I waited for 2 seconds')
-  return wait(1);
-})
-.then(() =>{
-  console.log('I waited for 3 seconds')
-  return wait(1);
-})
-.then(() =>{
-console.log('I waited for 4 second');
-})
-*/
-
-/*
 const getPosition = function(){
   return new Promise(function(resolve ,reject){
     // navigator.geolocation.getCurrentPosition(
@@ -258,44 +198,47 @@ const whereAmI = function(){
 //getPosition().then(pos => console.log(pos));
 
 btn.addEventListener('click',whereAmI);
+
 */
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //Using async and Await functions
-// const getPosition = function(){
-//   return new Promise(function(resolve ,reject){
-//     navigator.geolocation.getCurrentPosition(resolve,reject);
-//   });
-// }
 
-// const whereAmI = async function(){
-//   try{
-//   //GeoLocation
-//   const pos = await getPosition();
-//   const {latitude:lat ,longitude:lng} = pos.coords;
+const getPosition = function(){
+  return new Promise(function(resolve ,reject){
+    navigator.geolocation.getCurrentPosition(resolve,reject);
+  });
+}
+
+const whereAmI = async function(){
+  try{
+  //GeoLocation
+  const pos = await getPosition();
+  const {latitude:lat ,longitude:lng} = pos.coords;
   
-//   //Reverse Geocoding
-//   const resGeo = await fetch(`https://geocode.xyz/${lat},${lng}?geoit=json`);
-//   if(!resGeo.ok) throw new Error('Problem getting location')
+  //Reverse Geocoding
+  const resGeo = await fetch(`https://geocode.xyz/${lat},${lng}?geoit=json`);
+  if(!resGeo.ok) throw new Error('Problem getting location')
 
-//   const dataGeo = await resGeo.json();
+  const dataGeo = await resGeo.json();
 
-//   //Country Data
-//   const res = await fetch(`https://restcountries.com/v2/name/${dataGeo.country}`);
-//   if(!res.ok) throw new Error('Problem getting location')
-//   const data = await res.json();
+  //Country Data
+  const res = await fetch(`https://restcountries.com/v2/name/${dataGeo.country}`);
+  if(!res.ok) throw new Error('Problem getting location')
+  const data = await res.json();
   
-//   renderCountry(data[0]);
+  renderCountry(data[0]);
 
-//   return `You are in ${dataGeo.city},${dataGeo.country}`;
-//   }
-//   catch(err){
-//     console.error(`${err} ERROR`);
-//     renderError(`Something went wrong ${err.message}`);
+  return `You are in ${dataGeo.city},${dataGeo.country}`;
+  }
+  catch(err){
+    console.error(`${err} ERROR`);
+    renderError(`Something went wrong ${err.message}`);
 
-//     //Reject async Promises
-//     throw err;
-//   }
-// }
+    //Reject async Promises
+    throw err;
+  }
+}
 
 // console.log("1:Will get Location");
 // const city = whereAmI();
@@ -305,17 +248,19 @@ btn.addEventListener('click',whereAmI);
 // .catch(err => console.error(`2:${err.message} ERROR`))
 // .finally(()=>console.log("3:Finished Getting Location"));
 
-// (async function(){
-//   try{
-//     const city = await whereAmI();
-//     console.log(`2:${city}`);
-//   }
-//   catch(err){
-//     console.error(`2:${err.message} ERROR`)
-//   }
-//   console.log("3:Finished Getting Location")
-// })();
+(async function(){
+  try{
+    const city = await whereAmI();
+    console.log(`2:${city}`);
+  }
+  catch(err){
+    console.error(`2:${err.message} ERROR`)
+  }
+  console.log("3:Finished Getting Location")
+})();
 
+
+//Parallel Promises
 /*
 const get3Countries = async function(c1,c2,c3){
   try{
@@ -344,7 +289,11 @@ const get3Countries = async function(c1,c2,c3){
 get3Countries('portugal','canada','tanzania');
 */
 
+
+//Other Promise Combinators 
+
 //Promise.race
+/*
 (async function(){
 const res = await Promise.race([
   getJSON(`https://restcountries.com/v2/name/italy`),
@@ -368,11 +317,15 @@ Promise.race([
 .then(res => console.log(res[0]))
 .catch(err => console.error(err));
 
+//Promise.allsettled
+
 Promise.allSettled([
   Promise.resolve('SUCCESS'),
   Promise.reject('ERROR'),
   Promise.resolve('ANOTHER SUCCESS'),
 ]).then(res => console.log(res));
+
+//Promise.all
 
 Promise.all([
   Promise.resolve('SUCCESS'),
@@ -381,11 +334,13 @@ Promise.all([
 ]).then(res => console.log(res))
 .catch(err => console.error(err));
 
+//Promise.any
+
 Promise.any([
   Promise.resolve('SUCCESS'),
   Promise.reject('ERROR'),
   Promise.resolve('ANOTHER SUCCESS'),
 ]).then(res => console.log(res))
 .catch(err => console.error(err));
-
+*/
 

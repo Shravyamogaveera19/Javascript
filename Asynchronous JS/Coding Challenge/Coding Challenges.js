@@ -2,7 +2,6 @@
 
 //Coding Challenge 1
 
-
 const whereAmI = function(lat,lng){
     fetch(`https://geocode.xyz/${lat},${lng}?geoit=json`)
     .then(res => {
@@ -78,4 +77,49 @@ createImage('img-1.jpg')
   currentImg.style.display = 'none';
 })
 .catch(err => console.error(err));
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//Coding Challenge 3
+//PART 1
+const LoadNPause = async function(){
+  try{
+    //Load image 1
+    let img = await createImage('img-1.jpg');
+    console.log('Image 1 loaded');
+    await wait(2);
+    img.style.display = 'none';
+
+    //Load image 2
+    img = await createImage('img-2.jpg');
+    console.log('Image 2 loaded');
+    await wait(2);
+    img.style.display = 'none';
+  }
+  catch(err){
+    console.error(err);
+  }
+};
+//LoadNPause();
+
+//PART @
+
+const loadALL = async function(imgArr){
+  try{
+      const imgs = imgArr.map(async img => await
+        createImage(img));
+      console.log(imgs);
+
+      const imgsEl = await Promise.all(imgs);
+      console.log(imgsEl);
+
+      imgsEl.forEach(img => img.classList.add('parallel')); 
+  }
+  catch(err){
+      console.error(err);
+  }
+}; 
+loadALL(['img-1.jpg','img-2.jpg','img-3.jpg']);
+
+
+
