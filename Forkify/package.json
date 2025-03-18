@@ -1,0 +1,20 @@
+{
+  "name": "forkify",
+  "version": "1.0.0",
+  "description": "Recipe application",
+  "main": "index.js",
+  "scripts": {
+    "start": "parcel index.html",
+    "build": "parcel build index.html"
+  },
+  "author": "SHRAVYA S MOGAVEERA",
+  "license": "ISC",
+  "devDependencies": {
+    "@parcel/transformer-sass": "^2.14.0",
+    "parcel": "^2.14.0"
+  },
+  "dependencies": {
+    "core-js": "^3.41.0",
+    "regenerator-runtime": "^0.14.1"
+  }
+}
