@@ -1,31 +1,12 @@
+import View from './View.js';
+
 import icons from 'url:../../img/icons.svg';// parcel 2
 
-export class recipeView {
-  #parentElement = document.querySelector('.recipe');
-  #data;
-
-  render(data) {
-    this.#data = data;
-    const markup = this.#generateMarkup();
-    this.#clear();
-    this.#parentElement.insertAdjacentHTML('afterbegin', markup);
-  }
-
-  #clear() {
-    this.#parentElement.innerHTML = '';
-  }
-
-  renderSpinner = function () {
-    const markup = `
-      <div class="spinner">
-        <svg>
-          <use href="${icons}#icon-loader"></use>
-        </svg>
-      </div>`;
-    this.#parentElement.innerHTML = '';
-    this.#parentElement.insertAdjacentHTML('afterbegin', markup);
-  };
-
+class recipeView extends View{
+  _parentElement = document.querySelector('.recipe');
+  _errorMessage = 'We couldnot find that recipe. Please try another one!';
+  _message = '';
+  
   // Function to convert decimal to fraction
   decimalToFraction = (num) => {
     if (!num) return '';
@@ -74,12 +55,17 @@ export class recipeView {
     return `${numerator}/${denominator}`;
   };
   
-  #generateMarkup() {
+  addHandlerRender(handler){
+    //console.log(['hashchange', 'load']);  
+    ['hashchange', 'load'].forEach(ev => window.addEventListener(ev, handler));
+  }
+
+  _generateMarkup() {
     return `         
       <figure class="recipe__fig">
-        <img src="${this.#data.image}" alt="${this.#data.title}" class="recipe__img" />
+        <img src="${this._data.image}" alt="${this._data.title}" class="recipe__img" />
         <h1 class="recipe__title">
-          <span>${this.#data.title}</span>
+          <span>${this._data.title}</span>
         </h1>
       </figure>
 
@@ -88,20 +74,18 @@ export class recipeView {
           <svg class="recipe__info-icon">
             <use href="${icons}#icon-clock"></use>
           </svg>
-          <span class="recipe_info-data recipe_info-data--minutes">${this.#data.cookingTime}</span>
+          <span class="recipe_info-data recipe_info-data--minutes">${this._data.cookingTime}</span>
           <span class="recipe__info-text">minutes</span>
         </div>
         <div class="recipe__info">
           <svg class="recipe__info-icon">
             <use href="${icons}#icon-users"></use>
           </svg>
-          <span class="recipe_info-data recipe_info-data--people">${this.#data.servings}</span>
+          <span class="recipe_info-data recipe_info-data--people">${this._data.servings}</span>
         </div>
 
         <div class="recipe__user-generated">
-          <svg>
-            <use href="${icons}#icon-user"></use>
-          </svg>
+         
         </div>
         <button class="btn--round">
           <svg class="">
@@ -113,20 +97,7 @@ export class recipeView {
       <div class="recipe__ingredients">
         <h2 class="heading--2">Recipe ingredients</h2>
         <ul class="recipe__ingredient-list">
-          ${this.#data.ingredients.map(ing => {
-            const fraction = ing.quantity ? this.decimalToFraction(ing.quantity) : '';
-            return `
-              <li class="recipe__ingredient">
-                <svg class="recipe__icon">
-                  <use href="${icons}#icon-check"></use>
-                </svg>
-                <div class="recipe__quantity">${fraction}</div>
-                <div class="recipe__description">
-                  <span class="recipe__unit">${ing.unit}</span>
-                  ${ing.description}
-                </div>
-              </li>`;
-          }).join('')}
+          ${this._data.ingredients.map(ing =>this._genMarkupIngredients(ing)).join('')}
         </ul>
       </div>
 
@@ -134,12 +105,12 @@ export class recipeView {
         <h2 class="heading--2">How to cook it</h2>
         <p class="recipe__directions-text">
           This recipe was carefully designed and tested by
-          <span class="recipe__publisher">${this.#data.publisher}</span>. Please check out
+          <span class="recipe__publisher">${this._data.publisher}</span>. Please check out
           directions at their website.
         </p>
         <a
           class="btn--small recipe__btn"
-          href="${this.#data.sourceUrl}"
+          href="${this._data.sourceUrl}"
           target="_blank"
         >
           <span>Directions</span>
@@ -149,7 +120,22 @@ export class recipeView {
         </a>
       </div>`;
   }
+
+  _genMarkupIngredients(ing)
+    {
+      const fraction = ing.quantity ? this.decimalToFraction(ing.quantity) : '';
+      return `
+        <li class="recipe__ingredient">
+          <svg class="recipe__icon">
+            <use href="${icons}#icon-check"></use>
+          </svg>
+          <div class="recipe__quantity">${fraction}</div>
+          <div class="recipe__description">
+            <span class="recipe__unit">${ing.unit}</span>
+            ${ing.description}
+          </div>
+        </li>`;
+    }
 }
 
-//export default new recipeView();
 export default new recipeView();
